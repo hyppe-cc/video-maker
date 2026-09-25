@@ -254,11 +254,18 @@ const commands: Record<string, () => Promise<void> | void> = {
 		if (!video.files.vo) throw new Error("no voice file yet");
 		const dir = videoDir(p, v);
 		const gap = typeof flags["max-gap"] === "string" ? Number(flags["max-gap"]) : 0.3;
-		const { duration } = tighten(join(dir, video.files.vo), join(dir, "vo.tight.wav"), gap);
-		const n = video.script?.lines.length || video.cues?.L.length || 1;
-		const L = cuesFromSilence(join(dir, "vo.tight.wav"), n);
-		writeCues(p, v, { L, D: r2(L[L.length - 1][1] + project.format.tail), vo: "vo.tight.wav" });
-		console.log(`vo.tight.wav ${duration}s (kw marks dropped: re-add them if needed)`);
+		if (video.files.vo === "vo.tight.wav") throw new Error("already tightened: re-run `vk voice` (or `vk cues`) first");
+		const { duration, warp } = tighten(join(dir, video.files.vo), join(dir, "vo.tight.wav"), gap);
+		const r3 = (x: number) => Math.round(x * 1000) / 1000;
+		// keep the existing line timings and {#marks} (from TTS timestamps) by warping them;
+		// fall back to silence detection only when there are no cues yet
+		const L = video.cues?.L.length
+			? video.cues.L.map(([a, b]) => [r3(warp(a)), r3(warp(b))] as [number, number])
+			: cuesFromSilence(join(dir, "vo.tight.wav"), video.script?.lines.length || 1);
+		const kw = Object.fromEntries(Object.entries(video.cues?.kw ?? {}).map(([k, t]) => [k, r3(warp(t))]));
+		writeCues(p, v, { L, D: r2(L[L.length - 1][1] + project.format.tail), vo: "vo.tight.wav", ...(Object.keys(kw).length ? { kw } : {}) });
+		console.log(`vo.tight.wav ${duration}s`);
+		L.forEach(([a, b], i) => console.log(`  ${i}. ${a.toFixed(2)}–${b.toFixed(2)}  ${video.script?.lines[i]?.text ?? ""}`));
 	},
 
 	async check() {
