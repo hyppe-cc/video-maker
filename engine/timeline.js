@@ -3,7 +3,8 @@
 //   S     {name(lt, t, o) -> html}   scene renderers (lt = time since scene start)
 //   LINES [{t, hl, caps:[{t,hl,f:[from,to],y,size,red}], nocap}]  one per voice line
 //   SPEC  [[sceneName, [firstLine,lastLine], opts]]  opts.sfx = {event: o => [times]}
-// Cues (from cues.json): L = [[start,end]] per line, D = total duration, kw = named marks.
+// Cues (from cues.json): L = [[start,end]] per line, D = total duration, kw = named marks,
+// W = per line [[start,end,word]] (TTS word timing; scenes get it scene-relative as o.w).
 let TL=[], EV={};
 function build(L,D){
   TL=[];EV={cut:[],ok:[],skip:[],pop:[],impact:[],dm:[],price:[],cta:[]};
@@ -22,13 +23,14 @@ function build(L,D){
       });
     }
     const M={};for(const [k,v] of Object.entries(window.MK||{})) M[k]=v-a;
-    const o={...opts,l:lr,caps,dur:b-a,M};
+    const w=[];for(let k=f;k<=l;k++) w.push(((window.WD||[])[k]||[]).map(([s,e,x])=>[s-a,e-a,x]));
+    const o={...opts,l:lr,caps,dur:b-a,M,w};
     TL.push([name,a,b,o]);
     EV.cut.push(a);
     if(opts.sfx) for(const [k,fn] of Object.entries(opts.sfx)) for(const x of fn(o)) (EV[k]||=[]).push(a+x);
   });
 }
-window.setCues=function(L,D,mk){window.MK=mk&&!Array.isArray(mk)?mk:{};window.DUR=D;build(L,D)};
+window.setCues=function(L,D,mk,wd){window.MK=mk&&!Array.isArray(mk)?mk:{};window.WD=wd||[];window.DUR=D;build(L,D)};
 window.events=function(){return EV};
 // scene list for the preview UI: [{name, start, end}]
 window.scenes=function(){return TL.map(([name,a,b])=>({name,start:a,end:b}))};

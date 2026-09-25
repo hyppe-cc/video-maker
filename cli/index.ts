@@ -129,6 +129,7 @@ async function mixAudio(p: string, v: string, events: Record<string, number[]>) 
 	if (!video.cues) throw new Error("no cues.json yet (run: bun vk voice)");
 	const dir = videoDir(p, v);
 	let music = resolveMusic(p, v);
+	const master = parseMaster(video.master, video.cues);
 	mkdirSync(join(dir, "build"), { recursive: true });
 	if (music.endsWith(".rb")) music = await sonicPiMusic(p, v, music, events);
 	writeMix(join(dir, "build", "audio.wav"), {
@@ -139,6 +140,7 @@ async function mixAudio(p: string, v: string, events: Record<string, number[]>) 
 		format: project.format,
 		music,
 		samples: sampleMap(p),
+		master,
 	});
 	return music.includes("/") ? `music ${music.split("/").pop()}` : `music preset "${music}"`;
 }
@@ -157,6 +159,17 @@ async function sonicPiMusic(p: string, v: string, rb: string, events: Record<str
 	);
 	if (!cached) console.log(`   Sonic Pi → build/music-sonicpi.wav`);
 	return out;
+}
+
+/** script.md `master: "L5:-3, pose:0, descarga:+3.5"` → [time, dB] points (Ln = start of line n, else a {#mark}) */
+function parseMaster(spec: string | undefined, cues: Cues): [number, number][] {
+	if (!spec) return [];
+	return spec.split(",").map((part) => {
+		const [k, v] = part.split(":").map((s) => s.trim());
+		const t = /^L\d+$/.test(k) ? cues.L[Number(k.slice(1))]?.[0] : k === "start" ? 0 : cues.kw?.[k];
+		if (t === undefined || Number.isNaN(Number(v))) throw new Error(`master: can't read "${part.trim()}" (use L<n>:dB or <mark>:dB)`);
+		return [t, Number(v)] as [number, number];
+	});
 }
 
 /** asset names referenced by a video's scenes (asset('x'), image('x'), screen('x'), …) */
@@ -252,9 +265,9 @@ const commands: Record<string, () => Promise<void> | void> = {
 		mkdirSync(join(dir, "build"), { recursive: true });
 		writeFileSync(join(dir, "vo.mp3"), audio);
 		writeFileSync(join(dir, "build", "alignment.json"), JSON.stringify(alignment));
-		const { L, kw } = cuesFromAlignment(script.lines, sep, alignment);
+		const { L, kw, W } = cuesFromAlignment(script.lines, sep, alignment);
 		const D = r2(L[L.length - 1][1] + project.format.tail);
-		writeCues(p, v, { L, D, vo: "vo.mp3", ...(Object.keys(kw).length ? { kw } : {}) });
+		writeCues(p, v, { L, D, vo: "vo.mp3", ...(Object.keys(kw).length ? { kw } : {}), W });
 		console.log(`vo.mp3 + cues.json  D=${D}s`);
 		L.forEach(([a, b], i) => console.log(`  ${i}. ${a.toFixed(2)}–${b.toFixed(2)}  ${script.lines[i].text}`));
 	},
@@ -295,7 +308,8 @@ const commands: Record<string, () => Promise<void> | void> = {
 			? video.cues.L.map(([a, b]) => [r3(warp(a)), r3(warp(b))] as [number, number])
 			: cuesFromSilence(join(dir, "vo.tight.wav"), video.script?.lines.length || 1);
 		const kw = Object.fromEntries(Object.entries(video.cues?.kw ?? {}).map(([k, t]) => [k, r3(warp(t))]));
-		writeCues(p, v, { L, D: r2(L[L.length - 1][1] + project.format.tail), vo: "vo.tight.wav", ...(Object.keys(kw).length ? { kw } : {}) });
+		const W = video.cues?.W?.map((ws) => ws.map(([a, b, w]) => [r3(warp(a)), r3(warp(b)), w] as [number, number, string]));
+		writeCues(p, v, { L, D: r2(L[L.length - 1][1] + project.format.tail), vo: "vo.tight.wav", ...(Object.keys(kw).length ? { kw } : {}), ...(W ? { W } : {}) });
 		console.log(`vo.tight.wav ${duration}s`);
 		L.forEach(([a, b], i) => console.log(`  ${i}. ${a.toFixed(2)}–${b.toFixed(2)}  ${video.script?.lines[i]?.text ?? ""}`));
 	},
@@ -508,9 +522,14 @@ const commands: Record<string, () => Promise<void> | void> = {
 		console.log("4/4 mux + loudness");
 		mkdirSync(join(dir, "out"), { recursive: true });
 		const out = join(dir, "out", `${v}.mp4`);
+		// mastering: measure integrated loudness, apply the exact gain, then a brickwall limiter at -1.5 dB
+		// that only shaves transients (loudnorm's dynamic mode would flatten drops, silences and climaxes)
+		const probe = run("ffmpeg", ["-hide_banner", "-i", join(build, "audio.wav"), "-af", "ebur128", "-f", "null", "-"]).stderr;
+		const measured = Number.parseFloat(probe.match(/I:\s+(-?[\d.]+) LUFS\s*\n\s*Threshold[\s\S]*$/)?.[1] ?? "-23");
+		const gain = project.format.lufs - measured + 0.7; // the limiter costs about 0.7 LU
 		run("ffmpeg", [
 			"-loglevel", "error", "-y", "-i", join(build, "video.mp4"), "-i", join(build, "audio.wav"),
-			"-c:v", "copy", "-af", `loudnorm=I=${project.format.lufs}:TP=-1.5:LRA=11`,
+			"-c:v", "copy", "-af", `volume=${gain.toFixed(2)}dB,alimiter=limit=0.84:attack=1:release=60:level=false`,
 			"-c:a", "aac", "-b:a", "192k", "-ar", "44100", "-shortest", "-movflags", "+faststart", out,
 		]);
 		rmSync(join(build, "video.mp4"), { force: true });

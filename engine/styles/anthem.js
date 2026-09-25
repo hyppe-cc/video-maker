@@ -162,5 +162,23 @@ const ANTHEM=(()=>{
     }
     return o;
   }
-  return {bg,footage,slam,scramble,label,strike,flashAt,strobe,shake,black,fromTo,marquee,subtitle,expo,vhs};
+  // friction sparks: n hot streaks emitted from (x,y) between at and at+emit, flying along angle `dir`
+  // (degrees, both ways when both=true) ± spread, with gravity; white-hot cores with a brand glow
+  function sparks(lt,at,{x=W/2,y=H/2,n=60,emit=.5,dir=-26,both=true,spread=30,speed=[500,1700],gravity=2200,life=[.25,.7],width=[2,6],seed=1,color='#fff',glow='var(--brand)'}={}){
+    if(lt<at) return '';
+    let lines='';
+    for(let i=0;i<n;i++){
+      const r=j=>rnd(i*17.3+j*5.1+seed*101);
+      const born=at+emit*Math.pow(r(1),1.6), age=lt-born, lf=life[0]+(life[1]-life[0])*r(2);
+      if(age<0||age>lf) continue;
+      const a=(dir+(both&&r(3)<.5?180:0)+(r(4)-.5)*2*spread)*Math.PI/180, v=speed[0]+(speed[1]-speed[0])*r(5);
+      const vx=Math.cos(a)*v, vy=Math.sin(a)*v;
+      const px=x+vx*age, py=y+vy*age+.5*gravity*age*age;
+      const tvx=vx, tvy=vy+gravity*age, tail=.028;
+      const fade=1-age/lf, w=(width[0]+(width[1]-width[0])*r(6))*(.4+.6*fade);
+      lines+=`<line x1="${px}" y1="${py}" x2="${px-tvx*tail}" y2="${py-tvy*tail}" stroke="${color}" stroke-width="${w}" stroke-linecap="round" opacity="${Math.min(1,fade*1.4)}"/>`;
+    }
+    return lines?`<svg class="abs" style="left:0;top:0;overflow:visible;filter:drop-shadow(0 0 3px #fff) drop-shadow(0 0 10px ${glow})" width="${W}" height="${H}">${lines}</svg>`:'';
+  }
+  return {bg,footage,slam,scramble,label,strike,flashAt,strobe,shake,black,fromTo,marquee,subtitle,expo,vhs,sparks};
 })();

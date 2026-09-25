@@ -76,6 +76,18 @@ function grain(t){const x=(Math.floor(t*30)*37)%200,y=(Math.floor(t*30)*91)%200;
 function punch(lt,amt=.08,d=.18){return 1+amt*(1-eo(lin(lt,0,d)))}
 function shake(t,a,b,amp=14){if(t<a||t>b)return 'translate(0,0)';const k=1-lin(t,a,b);return `translate(${Math.sin(t*97)*amp*k}px,${Math.cos(t*83)*amp*k}px)`}
 function flash(lt,color='#fff',d=.1){const o=1-lin(lt,0,d);return o>0?`<div class="abs" style="inset:0;background:${color};opacity:${o}"></div>`:''}
+// when each word of `text` is spoken (scene-relative), matched in order against the voice's word
+// timing o.w[line] (accents, case and punctuation ignored). Words not in the voice get the previous
+// time + gap. Use as times for word-by-word reveals: slam(lt, at, text, {times: said(o, text)}).
+const said=(o,text,line=0,{gap=.12,from=0}={})=>{
+  const norm=s=>s.normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase().replace(/[^a-z0-9ñ]/g,'');
+  const spoken=(o.w&&o.w[line])||[]; let j=from, last=spoken.length?spoken[0][0]-gap:(o.l[line]||[0])[0];
+  return text.split(/\s+/).filter(Boolean).map(word=>{
+    const n=norm(word);
+    for(let k=j;k<spoken.length;k++) if(norm(spoken[k][2])===n){j=k+1;return last=spoken[k][0];}
+    return last=last+gap;
+  });
+};
 // fraction helper used by most scenes: times at fractions of the scene's first line
 const frac=(o,fs)=>{const [l]=o.l,d=l[1]-l[0];return fs.map(f=>l[0]+d*f)};
 

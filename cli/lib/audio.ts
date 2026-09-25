@@ -133,13 +133,15 @@ export type MixInput = {
 	format: Format;
 	/** preset name (beat|pulse|ambient|pluck|none) or a path to a music file */
 	music?: string;
+	/** master level automation: [time s, dB] points; each sets the level from then on (0.25 s ramp) */
+	master?: [number, number][];
 	/** event name -> sample file (overrides / extends the synth SFX) */
 	samples?: Record<string, string>;
 };
 
 export const PRESETS = ["beat", "pulse", "ambient", "pluck", "none"] as const;
 
-export function mix({ D, L, vo, events: ev, format, music: musicSpec = "beat", samples = {} }: MixInput): Float32Array {
+export function mix({ D, L, vo, events: ev, format, music: musicSpec = "beat", samples = {}, master = [] }: MixInput): Float32Array {
 	const out = new Float32Array(N(D + 1.5));
 	const put = (sig: Float32Array, t: number, g = 1) => {
 		const i = Math.max(0, Math.floor(t * SR));
@@ -282,12 +284,38 @@ export function mix({ D, L, vo, events: ev, format, music: musicSpec = "beat", s
 		voice.set(v.subarray(0, Math.min(v.length, voice.length)));
 		// sidechain duck: music down ~9 dB while the voice speaks
 		const e = movingAvg(voice.map(Math.abs), N(0.08));
-		music = music.map((m, i) => m * (1 - 0.65 * Math.min(1, Math.max(0, e[i] / 0.03))));
+		const duck = format.duck ?? 0.65;
+		music = music.map((m, i) => m * (1 - duck * Math.min(1, Math.max(0, e[i] / 0.03))));
 	}
-	const y = music.map((m, i) => m * 0.55 + (voice ? voice[i] * 1.35 : 0));
+	const mg = 0.55 * (format.musicGain ?? 1);
+	const y = music.map((m, i) => m * mg + (voice ? voice[i] * 1.35 : 0));
+	// master automation (e.g. quieter middle, louder climax), applied before the soft clip
+	if (master.length) {
+		const pts = [...master].sort((a, b) => a[0] - b[0]);
+		const ramp = N(0.25);
+		let db = 0;
+		let k = 0;
+		let from = 0;
+		let at = -1;
+		for (let i = 0; i < y.length; i++) {
+			while (k < pts.length && i >= N(pts[k][0])) {
+				from = at >= 0 ? from + (db - from) * Math.min(1, (i - at) / ramp) : db;
+				db = pts[k][1];
+				at = i;
+				k++;
+			}
+			const cur = at >= 0 ? from + (db - from) * Math.min(1, (i - at) / ramp) : 0;
+			y[i] *= 10 ** (cur / 20);
+		}
+	}
 	const fo = N(0.6);
 	for (let i = 0; i < fo && i < y.length; i++) y[y.length - fo + i] *= 1 - i / (fo - 1);
-	return y.map((s) => Math.tanh(s * 1.1) * 0.9);
+	// headroom: keep the loudest moment in the soft clip's gentle range so drops and climaxes keep their
+	// dynamics (render's linear loudness pass brings the level back up)
+	let pk = 0;
+	for (const v of y) pk = Math.max(pk, Math.abs(v));
+	const pre = pk > 0.7 ? 0.7 / pk : 1;
+	return y.map((s) => Math.tanh(s * pre * 1.1) * 0.9);
 }
 
 export function writeMix(file: string, input: MixInput) {

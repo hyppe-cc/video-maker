@@ -32,7 +32,7 @@ export function cuesFromAlignment(
 	lines: ScriptLine[],
 	sep: string,
 	al: Alignment,
-): { L: [number, number][]; kw: Record<string, number> } {
+): { L: [number, number][]; kw: Record<string, number>; W: [number, number, string][][] } {
 	// the alignment normally echoes the input text 1:1; walk both to be safe
 	const text = lines.map((l) => l.text).join(sep);
 	const idx: number[] = new Array(text.length).fill(-1);
@@ -57,8 +57,17 @@ export function cuesFromAlignment(
 	};
 	const L: [number, number][] = [];
 	const kw: Record<string, number> = {};
+	const W: [number, number, string][][] = [];
 	let off = 0;
 	for (const line of lines) {
+		// per-word timing, so scenes can show each word the moment it is spoken
+		const words: [number, number, string][] = [];
+		for (const m of line.text.matchAll(/\S+/g)) {
+			const ws = at(off + (m.index ?? 0), 1, "s"),
+				we = at(off + (m.index ?? 0) + m[0].length - 1, -1, "e");
+			if (ws !== undefined) words.push([r3(ws), r3(Math.max(ws, we ?? ws)), m[0]]);
+		}
+		W.push(words);
 		const a = off,
 			b = off + line.text.length - 1;
 		const s = at(a, 1, "s") ?? (L.length ? L[L.length - 1][1] : 0);
@@ -70,5 +79,5 @@ export function cuesFromAlignment(
 		}
 		off += line.text.length + sep.length;
 	}
-	return { L, kw };
+	return { L, kw, W };
 }

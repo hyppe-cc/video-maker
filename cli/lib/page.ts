@@ -78,7 +78,7 @@ export function buildPage(p: string, v: string, opts: PageOptions): string {
 
 	// No cues yet (not voiced): lay lines out 2.5 s apart so the preview still plays.
 	const init = cues
-		? `setCues(${JSON.stringify(cues.L)},${cues.D},${JSON.stringify(cues.kw ?? {})});`
+		? `setCues(${JSON.stringify(cues.L)},${cues.D},${JSON.stringify(cues.kw ?? {})},${JSON.stringify(cues.W ?? [])});`
 		: "setCues(LINES.map((_,i)=>[i*2.5+.2,i*2.5+2.2]),LINES.length*2.5+1,{});";
 
 	return `<!doctype html>

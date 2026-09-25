@@ -59,6 +59,8 @@ Functions `o => [times relative to scene]`. The audio mixer (`cli/lib/audio.ts`)
 
 ## Primitives (`primitives.js`)
 
+Word timing: `said(o, text, line=0)` → when each word of `text` is spoken (scene-relative), from the TTS word timing in `cues.json` (`W`, passed to scenes as `o.w`). Use it so text lands on the voice: `slam(lt, at, text, {times: said(o, text)})`.
+
 Timing / easing: `clamp(x,a,b)`, `lin(t,a,b)` (0→1 between a and b), `eo(x)` ease-out cubic, `back(x)` overshoot,
 `pop(t, at, d=.22)` overshoot 0→1 starting at `at`, `fade(t,a,b)`, `frac(o, [fractions])` times inside the scene's first line.
 
@@ -167,6 +169,7 @@ Manifesto / brand films: one accent color, giant uppercase type, documentary foo
 | `scramble(lt, at, text, {d, size})` | hacker decode: glyphs resolve left to right |
 | `label(lt, at, text, {rule})` | wide-tracked kicker with a red rule |
 | `fromTo(lt, at, from, to, {swap})` | "de X" struck through, then "a Y" slams in red |
+| `sparks(lt, at, {x, y, n, emit, dir, spread, speed, gravity, life, width})` | friction sparks: white-hot streaks with gravity and a brand glow, sprayed both ways along `dir` |
 | `vhs(t, html, {amount, osd: {mode: 'PLAY'\|'REC'\|…, clock, label}, heavy, tear, seed})` | wraps any layer in a worn VHS tape: RGB split, scanlines, rolling tracking band that tears the picture, head-switching noise, jitter, lifted blacks, VCR on-screen text (VT323). Good for "the past" vs a clean present, or a camcorder REC for "day one" |
 | `strike` / `flashAt` / `strobe` / `shake` / `black` / `marquee` / `subtitle` | red strike bar, flash and strobe frames at any time, camera shake, black frames, outlined text band, documentary subtitle for `o.caps` |
 
@@ -176,6 +179,7 @@ The mix (`cli/lib/audio.ts`, `bun vk mix`) = music bed + SFX events + voice, mus
 
 - **Music:** `music:` in script.md (or project `format.music`): `true` = the style's preset, `beat` (punchy drums), `pulse` (four-on-the-floor + arp), `ambient` (pads, no drums), `pluck` (lofi pluck + soft kick), `none`, or the **name of a music asset**. The first `impact` event drops the beat and adds a riser.
 - **Sonic Pi:** `music: sonicpi` plays the video's `music.rb`, real [Sonic Pi](https://sonic-pi.net/code.html) code (`music: x.rb` = the video's `x.rb`, else `projects/<p>/music/x.rb`). `bun vk music <p> <v>` creates it from a template, then renders it: the Sonic Pi web app runs it in headless Chromium in real time (about the video's length + 6 s, needs network) and its recorder gives a WAV, cached in `build/music-sonicpi.wav` until the code or timing changes. The code is prefixed with the video's timing in seconds: `DUR`, `LINES`, `MARKS` (`{#marks}`), `EVENTS` (SFX events, e.g. `EVENTS[:impact][0]`) and `sec(s)` to turn seconds into beats, so drops, breaks and stops can land on the story. Errors come back with the line number in your file. Example: `projects/sheepr/videos/pr-social-media/music.rb` (private).
+- **Mix balance:** project `format.musicGain` (default 1) and `format.duck` (0..1, default 0.65). Per video, `master:` in script.md automates the whole mix level, e.g. `master: start:0, L5:-3, pose:0, descarga:+3.5` (`Ln` = start of line n or a `{#mark}`; each point holds until the next, 0.25 s ramps). The mix keeps headroom before its soft clip, and render masters with exact gain + a -1.5 dB limiter (no dynamic loudnorm), so drops and climaxes survive.
 - **SFX:** any key in `opts.sfx` is an event. Built-in synths: `pop ok skip dm impact price cta whoosh`. A **sound-effect asset with the same name wins** (e.g. an `sfx` asset named `pop` replaces the synth pop), and any other name plays the asset of that name: `sfx: {camera: o => [.2]}` plays `assets/sfx/camera.*`. Scene cuts play `whoosh` (the synth, or an asset named `whoosh`).
 
 ## Layout rules

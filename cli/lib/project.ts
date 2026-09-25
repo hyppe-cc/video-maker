@@ -28,6 +28,10 @@ export type Format = {
 	style: string;
 	/** seconds held after the last spoken word */
 	tail: number;
+	/** music level multiplier in the mix (1 = default) */
+	musicGain?: number;
+	/** how much the music dips under the voice, 0..1 (default 0.65, about -9 dB) */
+	duck?: number;
 };
 
 export type Voice = {
@@ -193,7 +197,8 @@ export function parseScript(src: string): Script {
 
 // ---------- videos ----------
 
-export type Cues = { L: [number, number][]; D: number; vo?: string; kw?: Record<string, number> };
+/** L = [start, end] per line, kw = {#mark} times, W = per line [start, end, word] (from TTS alignment) */
+export type Cues = { L: [number, number][]; D: number; vo?: string; kw?: Record<string, number>; W?: [number, number, string][][] };
 
 export type VideoInfo = {
 	slug: string;
@@ -205,6 +210,8 @@ export type VideoInfo = {
 	style: string;
 	/** script.md `music:` override (preset or music asset name) */
 	music?: string;
+	/** script.md `master:` mix level automation, e.g. "L5:-3, pose:0, descarga:+3.5" (Ln = line n start, or a {#mark}) */
+	master?: string;
 	script: Script | null;
 	cues: Cues | null;
 	files: { vo?: string; mix?: string; out?: string; stills: string[] };
@@ -241,6 +248,7 @@ export function loadVideo(p: string, v: string): VideoInfo {
 		theme,
 		style: typeof meta.style === "string" ? meta.style : loadProject(p).format.style,
 		music: typeof meta.music === "string" ? meta.music : undefined,
+		master: typeof meta.master === "string" ? meta.master : undefined,
 		script,
 		cues,
 		files: {
