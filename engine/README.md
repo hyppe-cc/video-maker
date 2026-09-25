@@ -167,6 +167,7 @@ Manifesto / brand films: one accent color, giant uppercase type, documentary foo
 | `scramble(lt, at, text, {d, size})` | hacker decode: glyphs resolve left to right |
 | `label(lt, at, text, {rule})` | wide-tracked kicker with a red rule |
 | `fromTo(lt, at, from, to, {swap})` | "de X" struck through, then "a Y" slams in red |
+| `vhs(t, html, {amount, osd: {mode: 'PLAY'\|'REC'\|…, clock, label}, heavy, tear, seed})` | wraps any layer in a worn VHS tape: RGB split, scanlines, rolling tracking band that tears the picture, head-switching noise, jitter, lifted blacks, VCR on-screen text (VT323). Good for "the past" vs a clean present, or a camcorder REC for "day one" |
 | `strike` / `flashAt` / `strobe` / `shake` / `black` / `marquee` / `subtitle` | red strike bar, flash and strobe frames at any time, camera shake, black frames, outlined text band, documentary subtitle for `o.caps` |
 
 ## Audio

@@ -125,5 +125,42 @@ const ANTHEM=(()=>{
     }).join(' ');
     return `<div class="abs an-sub" style="left:80px;right:80px;top:${o.y&&o.y!==1400?o.y:y}px;text-align:center;font-size:${o.size&&o.size!==84?o.size:size}px;color:#fff;opacity:${out}">${html}</div>`;
   }
-  return {bg,footage,slam,scramble,label,strike,flashAt,strobe,shake,black,fromTo,marquee,subtitle,expo};
+  // ---- old VHS tape ----
+  // RGB channel split as SVG filters (CSS drop-shadow can't split an opaque layer)
+  document.body.insertAdjacentHTML('beforeend',`<svg width="0" height="0" style="position:absolute">${[[1,4,-2],[2,8,-4]].map(([n,r,b])=>`
+    <filter id="an-vhs${n}" x="0" y="0" width="100%" height="100%" color-interpolation-filters="sRGB">
+      <feColorMatrix in="SourceGraphic" type="matrix" values="1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 0" result="r"/>
+      <feOffset in="r" dx="${r}" result="r2"/>
+      <feColorMatrix in="SourceGraphic" type="matrix" values="0 0 0 0 0 0 1 0 0 0 0 0 1 0 0 0 0 0 1 0" result="gb"/>
+      <feOffset in="gb" dx="${b}" result="gb2"/>
+      <feBlend in="r2" in2="gb2" mode="screen"/></filter>`).join('')}</svg>`);
+  const pad=n=>String(Math.floor(n)).padStart(2,'0');
+  // wrap any html in a worn VHS look: chroma split, soft blur, lifted blacks, scanlines, a rolling
+  // tracking band that tears the picture, head-switching noise at the bottom, jitter and flicker.
+  // osd: {mode:'PLAY'|'REC'|'STOP'|…, clock: seconds on the tape counter, label: bottom-right text}
+  function vhs(t,html,{amount=1,osd=null,seed=0,tear=true,heavy=false}={}){
+    const f=Math.floor(t*30), r=i=>rnd(f*13.7+i*7.1+seed);
+    const jy=r(1)<.1?(r(2)-.5)*16*amount:0, jx=(r(3)-.5)*3*amount;
+    const fl=1+(r(4)-.5)*.1*amount;
+    let o=`<div class="abs" style="inset:-6px;transform:translate(${jx}px,${jy}px);filter:url(#an-vhs${heavy?2:1}) saturate(${1+.3*amount}) contrast(${1+.08*amount}) brightness(${fl}) blur(${.6*amount}px)">${html}</div>`;
+    // tracking band rolling down, with the picture torn sideways inside it
+    const by=((t*190+seed*400)%(H+500))-250, bh=70+40*r(5);
+    if(tear) o+=`<div class="abs" style="inset:0;clip-path:inset(${by}px 0 ${H-by-bh}px 0);transform:translateX(${(18+22*r(6))*amount}px);filter:url(#an-vhs2) brightness(1.25)">${html}</div>`;
+    o+=`<svg class="abs" style="left:0;top:${by-10}px;width:${W}px;height:${bh+20}px;opacity:${.32*amount};mix-blend-mode:screen"><rect width="100%" height="100%" filter="url(#n)"/></svg>`;
+    // head-switching noise at the bottom edge
+    o+=`<svg class="abs" style="left:${-20*r(7)}px;top:${H-46}px;width:${W+40}px;height:46px;opacity:${.55*amount}"><rect width="100%" height="100%" filter="url(#n)"/></svg>`;
+    // lifted blacks, scanlines, vignette
+    o+=`<div class="abs" style="inset:0;background:#1a1420;mix-blend-mode:lighten;opacity:${.55*amount}"></div>`;
+    o+=`<div class="abs" style="inset:0;background:repeating-linear-gradient(0deg,rgba(0,0,0,${.3*amount}) 0 2px,transparent 2px 4px)"></div>`;
+    o+=`<div class="abs" style="inset:0;background:radial-gradient(120% 90% at 50% 50%,transparent 55%,rgba(0,0,0,${.6*amount}))"></div>`;
+    if(osd){
+      const rec=osd.mode==='REC', blink=Math.floor(t*1.6)%2===0, c=osd.clock??t;
+      const st='font-family:VT323,monospace;color:#f1f1f1;text-shadow:3px 0 rgba(255,0,60,.6),-2px 0 rgba(0,200,255,.5),0 0 12px rgba(255,255,255,.4)';
+      o+=`<div class="abs" style="left:70px;top:150px;font-size:76px;${st}">${rec?`<span style="color:#ff2a2a;opacity:${blink?1:0}">●</span> REC`:`${esc(osd.mode||'PLAY')}${(osd.mode||'PLAY')==='PLAY'?' ►':''}`}</div>`;
+      o+=`<div class="abs" style="left:70px;top:1640px;font-size:64px;${st}">SP &nbsp;${Math.floor(c/3600)}:${pad(c/60%60)}:${pad(c%60)}</div>`;
+      if(osd.label) o+=`<div class="abs" style="right:70px;top:1640px;font-size:64px;text-align:right;${st}">${esc(osd.label)}</div>`;
+    }
+    return o;
+  }
+  return {bg,footage,slam,scramble,label,strike,flashAt,strobe,shake,black,fromTo,marquee,subtitle,expo,vhs};
 })();

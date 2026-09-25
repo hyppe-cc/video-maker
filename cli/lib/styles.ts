@@ -36,8 +36,8 @@ export const STYLES = {
 	},
 	anthem: {
 		label: "Anthem / manifesto",
-		about: "Brand-film drama: giant uppercase type slamming in, text scramble, red strikes, strobes, B&W or red-duotone documentary footage, breathing glow.",
-		fonts: [] as string[],
+		about: "Brand-film drama: giant uppercase type slamming in, text scramble, red strikes, strobes, B&W or red-duotone documentary footage, old VHS tape look, breathing glow.",
+		fonts: ["vt323/400"],
 		music: "ambient" as MusicPreset,
 	},
 } as const;
