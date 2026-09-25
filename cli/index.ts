@@ -24,6 +24,7 @@ import { run } from "./lib/ffmpeg.ts";
 import { assertSlug, PROJECTS_DIR, projectDir, ROOT, videoDir } from "./lib/paths.ts";
 import { type Cues, listProjects, listVideos, loadProject, loadVideo, readKnowledge } from "./lib/project.ts";
 import { exportEvents, openVideo, renderFrames, renderStills } from "./lib/render.ts";
+import { renderSonicPi } from "./lib/sonicpi.ts";
 import { tighten } from "./lib/tighten.ts";
 
 const HELP = `video-kit — punchy vertical videos from a script
@@ -39,6 +40,7 @@ const HELP = `video-kit — punchy vertical videos from a script
   bun vk check <project> <video>        validate script / LINES / SPEC / cues / assets
   bun vk styles                         list video styles (script.md "style:")
   bun vk asset <sub> …                  images, video, sfx, music (bun vk asset help)
+  bun vk music <project> <video>        Sonic Pi music: create music.rb, or render it (script.md "music: sonicpi")
   bun vk mix <project> <video>          re-mix audio only (build/audio.wav, heard in the preview)
   bun vk stills <project> <video> [t ...] [--dark|--light]  JPG previews -> stills/
   bun vk render <project> <video> [--dark|--light]        final MP4 -> out/<video>.mp4
@@ -84,6 +86,14 @@ const ASSET_HELP = `bun vk asset <sub>
   credits <p> [video]                              attribution lines for licensed assets
   rm <p> <name>`;
 
+/** a Sonic Pi music file: `sonicpi` = videos/<v>/music.rb; `x.rb` = the video's x.rb, else projects/<p>/music/x.rb */
+function sonicPiFile(p: string, v: string, spec: string): string | null {
+	if (spec !== "sonicpi" && !spec.endsWith(".rb")) return null;
+	const name = spec === "sonicpi" ? "music.rb" : spec;
+	const inVideo = join(videoDir(p, v), name);
+	return existsSync(inVideo) || spec === "sonicpi" ? inVideo : join(projectDir(p), "music", name);
+}
+
 /** music: script.md music: > project format.music (true = style preset) */
 function resolveMusic(p: string, v: string): string {
 	const project = loadProject(p);
@@ -92,6 +102,11 @@ function resolveMusic(p: string, v: string): string {
 	const m = video.music ?? project.format.music;
 	const spec = m === true ? STYLES[style].music : m === false ? "none" : String(m);
 	if ((PRESETS as readonly string[]).includes(spec)) return spec;
+	const rb = sonicPiFile(p, v, spec);
+	if (rb) {
+		if (!existsSync(rb)) throw new Error(`Sonic Pi music file missing: ${rb} (create it with: bun vk music ${p} ${v})`);
+		return rb;
+	}
 	const f = assetFile(p, spec);
 	if (!f) throw new Error(`music "${spec}" is neither a preset (${PRESETS.join(", ")}) nor a music asset`);
 	return f;
@@ -113,8 +128,9 @@ async function mixAudio(p: string, v: string, events: Record<string, number[]>) 
 	const video = loadVideo(p, v);
 	if (!video.cues) throw new Error("no cues.json yet (run: bun vk voice)");
 	const dir = videoDir(p, v);
-	const music = resolveMusic(p, v);
+	let music = resolveMusic(p, v);
 	mkdirSync(join(dir, "build"), { recursive: true });
+	if (music.endsWith(".rb")) music = await sonicPiMusic(p, v, music, events);
 	writeMix(join(dir, "build", "audio.wav"), {
 		D: video.cues.D,
 		L: video.cues.L,
@@ -124,7 +140,23 @@ async function mixAudio(p: string, v: string, events: Record<string, number[]>) 
 		music,
 		samples: sampleMap(p),
 	});
-	return music.includes("/") ? `music asset ${music.split("/").pop()}` : `music preset "${music}"`;
+	return music.includes("/") ? `music ${music.split("/").pop()}` : `music preset "${music}"`;
+}
+
+/** render a Sonic Pi file to build/music-sonicpi.wav (cached on code + timing) */
+async function sonicPiMusic(p: string, v: string, rb: string, events: Record<string, number[]>) {
+	const video = loadVideo(p, v);
+	if (!video.cues) throw new Error("no cues.json yet (run: bun vk voice)");
+	const out = join(videoDir(p, v), "build", "music-sonicpi.wav");
+	mkdirSync(join(videoDir(p, v), "build"), { recursive: true });
+	const { cached } = await renderSonicPi(
+		readFileSync(rb, "utf8"),
+		{ D: video.cues.D, L: video.cues.L, kw: video.cues.kw, events },
+		out,
+		(s) => console.log(`   ${s}`),
+	);
+	if (!cached) console.log(`   Sonic Pi → build/music-sonicpi.wav`);
+	return out;
 }
 
 /** asset names referenced by a video's scenes (asset('x'), image('x'), screen('x'), …) */
@@ -304,6 +336,22 @@ const commands: Record<string, () => Promise<void> | void> = {
 
 	styles() {
 		for (const [k, st] of Object.entries(STYLES)) console.log(`${k.padEnd(8)} ${st.label.padEnd(18)} music: ${st.music.padEnd(8)} ${st.about}`);
+	},
+
+	async music() {
+		const [p, v] = need(2, "music <project> <video>");
+		const video = loadVideo(p, v);
+		const project = loadProject(p);
+		const m = video.music ?? project.format.music;
+		const rb = sonicPiFile(p, v, typeof m === "string" ? m : "sonicpi") ?? join(videoDir(p, v), "music.rb");
+		if (!existsSync(rb)) {
+			writeFileSync(rb, fill(readFileSync(join(ROOT, "cli", "templates", "music.rb"), "utf8"), { bpm: String(project.format.bpm) }));
+			console.log(`created ${rb}\nset "music: sonicpi" in script.md, edit the file, then run this again to render it`);
+			return;
+		}
+		if (!video.cues) throw new Error("no cues.json yet (run: bun vk voice)");
+		const out = await sonicPiMusic(p, v, rb, await exportEvents(p, v, light));
+		console.log(out);
 	},
 
 	async mix() {
