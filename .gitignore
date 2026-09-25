@@ -1,0 +1,42 @@
+node_modules
+.DS_Store
+dist
+dist-ssr
+*.local
+.nitro
+.tanstack
+.wrangler
+.output
+.vinxi
+__unconfig*
+todos.json
+
+# secrets
+.env
+.env.*
+!.env.example
+
+# legacy kit (private, pre-migration)
+foni-video-kit
+
+# project data is private: only the example project is shared
+projects/*
+!projects/_example/
+
+# generated media / build artifacts (also inside _example)
+**/videos/*/out/
+**/videos/*/build/
+**/videos/*/stills/
+**/assets/.tmp/
+**/assets/.last-search.json
+# example project: commit the manifest + html sources, not the binaries (`bun vk asset pull _example`)
+projects/_example/assets/images/
+projects/_example/assets/video/
+projects/_example/assets/frames/
+projects/_example/assets/sfx/
+projects/_example/assets/music/
+*.mp4
+*.mov
+*.wav
+playwright-report/
+test-results/

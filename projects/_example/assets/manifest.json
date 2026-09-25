@@ -1,0 +1,107 @@
+{
+ "assets": {
+  "app-home": {
+   "name": "app-home",
+   "kind": "image",
+   "file": "images/app-home.png",
+   "source": {
+    "type": "html",
+    "html": "html/app-home.html"
+   },
+   "license": "own",
+   "width": 1170,
+   "height": 2532,
+   "addedAt": "2026-09-25"
+  },
+  "story-rain": {
+   "name": "story-rain",
+   "kind": "image",
+   "file": "images/story-rain.jpg",
+   "source": {
+    "type": "openverse",
+    "url": "https://cdn.stocksnap.io/img-thumbs/960w/XB78WQK09O.jpg",
+    "id": "0fc6469b-2f53-4015-a164-db2caebc7274",
+    "landing": "https://stocksnap.io/photo/girl-sad-XB78WQK09O"
+   },
+   "license": "CC0 1.0",
+   "credit": "Milada Vigerova",
+   "width": 960,
+   "height": 1011,
+   "addedAt": "2026-09-25"
+  },
+  "story-coffee": {
+   "name": "story-coffee",
+   "kind": "image",
+   "file": "images/story-coffee.jpg",
+   "source": {
+    "type": "openverse",
+    "url": "https://cdn.stocksnap.io/img-thumbs/960w/AAQEBOVP95.jpg",
+    "id": "c7eac830-5169-4223-83ff-40580f3abe07",
+    "landing": "https://stocksnap.io/photo/coffee-cup-AAQEBOVP95"
+   },
+   "license": "CC0 1.0",
+   "credit": "Pawel Kadysz",
+   "width": 960,
+   "height": 1281,
+   "addedAt": "2026-09-25"
+  },
+  "story-sunrise": {
+   "name": "story-sunrise",
+   "kind": "image",
+   "file": "images/story-sunrise.jpg",
+   "source": {
+    "type": "openverse",
+    "url": "https://upload.wikimedia.org/wikipedia/commons/f/fd/Moon_in_Sunrise_Sky_2.jpg",
+    "id": "6cbbab2b-56ce-4f53-a947-eeb74de33576",
+    "landing": "https://commons.wikimedia.org/w/index.php?curid=19938478"
+   },
+   "license": "BY-SA 3.0",
+   "credit": "Jessie Eastland",
+   "width": 2112,
+   "height": 2816,
+   "addedAt": "2026-09-25"
+  },
+  "swipe": {
+   "name": "swipe",
+   "kind": "sfx",
+   "file": "sfx/swipe.mp3",
+   "source": {
+    "type": "openverse",
+    "url": "https://cdn.freesound.org/previews/60/60007_71257-hq.mp3",
+    "id": "b7ae7822-8ec5-4a82-b6f8-d539b51caa61",
+    "landing": "https://freesound.org/people/qubodup/sounds/60007"
+   },
+   "license": "CC0 1.0",
+   "credit": "qubodup",
+   "duration": 0.45,
+   "addedAt": "2026-09-25"
+  },
+  "camera": {
+   "name": "camera",
+   "kind": "sfx",
+   "file": "sfx/camera.mp3",
+   "source": {
+    "type": "openverse",
+    "url": "https://cdn.freesound.org/previews/170/170229_3133582-hq.mp3",
+    "id": "3290f0e3-a217-48c9-bafb-06401b961c21",
+    "landing": "https://freesound.org/people/roachpowder/sounds/170229"
+   },
+   "license": "CC0 1.0",
+   "credit": "roachpowder",
+   "duration": 0.3,
+   "addedAt": "2026-09-25"
+  }
+ },
+ "requests": [
+  {
+   "name": "real-app-screen",
+   "description": "Screenshot of the Loopa habit list screen (iPhone, light mode)",
+   "kind": "image",
+   "video": "vox-demo",
+   "size": "1170x2532",
+   "id": "real-app-screen-muh6if17",
+   "status": "open",
+   "createdAt": "2026-09-25"
+  }
+ ]
+}

@@ -1,0 +1,48 @@
+/* video-kit engine styles. Every color comes from the brand vars that the page
+   builder injects from project.json (see cli/lib/page.ts). */
+:root{
+  --brand:#6366f1;--brand2:#22d3ee;--ink:#0b0b10;--paper:#fafaff;
+  --ok:#22c55e;--red:#ff2e4d;--mut:#8b8b98;
+  --font:Inter;--font-display:Inter;
+  --pink:var(--brand);--pink2:var(--brand2); /* legacy aliases */
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{width:var(--w,1080px);height:var(--h,1920px);overflow:hidden;background:var(--ink)}
+body{font-family:var(--font),'Noto Color Emoji',sans-serif;color:#fff;-webkit-font-smoothing:antialiased}
+#stage{position:absolute;inset:0;overflow:hidden}
+.abs{position:absolute}
+.display{font-family:var(--font-display),var(--font),sans-serif}
+.phone{position:absolute;left:90px;width:900px;background:#15151c;border-radius:56px;border:3px solid #2a2a36;box-shadow:0 40px 120px rgba(0,0,0,.6),0 0 0 12px #0f0f15;overflow:hidden}
+.post{display:flex;gap:28px;padding:40px 44px 30px;border-bottom:2px solid #262632;align-items:center}
+.thumb{width:150px;height:150px;border-radius:24px;background:linear-gradient(135deg,var(--brand),var(--brand2));display:flex;align-items:center;justify-content:center;font-weight:900;font-size:30px;text-align:center;line-height:1.05;flex:none}
+.ptext{font-size:38px;font-weight:600;line-height:1.25}
+.ptext b{font-weight:900}
+.hdr{font-size:30px;font-weight:800;color:var(--mut);padding:24px 44px 6px;letter-spacing:.5px;text-transform:uppercase;display:flex;justify-content:space-between}
+.cm{display:flex;gap:24px;padding:22px 44px;align-items:flex-start;transform-origin:left center}
+.av{width:84px;height:84px;border-radius:50%;flex:none;display:flex;align-items:center;justify-content:center;font-weight:900;font-size:36px}
+.cu{font-size:30px;font-weight:800;color:#c9c9d6}
+.ct{font-size:48px;font-weight:600;line-height:1.2;margin-top:4px}
+.chip{display:inline-flex;align-items:center;gap:10px;margin-top:12px;font-size:30px;font-weight:800;padding:8px 20px;border-radius:999px}
+.chip.no{background:#262631;color:#8b8b98}
+.chip.ok{background:var(--ok);color:#04220f}
+.chip.skip{background:#262631;color:#b9b9c6;border:2px dashed #4a4a5a}
+.cap{position:absolute;left:60px;right:60px;text-align:center;font-weight:900;font-size:86px;line-height:1.08;letter-spacing:-2px;text-shadow:0 6px 0 rgba(0,0,0,.35)}
+.w{display:inline-block;margin:0 .12em}
+.hl{background:var(--brand);color:#fff;padding:0 .18em;border-radius:14px}
+.sticker{position:absolute;white-space:nowrap;font-weight:900;padding:18px 34px;border-radius:22px;font-size:62px;letter-spacing:-1px;box-shadow:0 14px 0 rgba(0,0,0,.35)}
+.grain{position:absolute;inset:-200px;pointer-events:none;opacity:.10;mix-blend-mode:overlay}
+.field{background:#f4f4f7;border-radius:26px;padding:26px 30px;font-size:46px;font-weight:600;color:#111;min-height:108px}
+.flabel{font-size:30px;font-weight:800;color:#6b6b78;margin:34px 0 12px;text-transform:uppercase;letter-spacing:1px}
+.caret{display:inline-block;width:5px;height:52px;background:var(--brand);vertical-align:-8px;margin-left:4px}
+
+/* ---- light theme ---- */
+body.light{color:var(--ink);background:#fff}
+body.light .phone{background:#fff;border-color:#ececf2;box-shadow:0 40px 100px color-mix(in srgb,var(--brand) 18%,transparent),0 0 0 12px color-mix(in srgb,var(--brand) 6%,#f6f6f8)}
+body.light .post{border-bottom-color:#f0eef3}
+body.light .hdr{color:#9a9aa8}
+body.light .cu{color:#6b6b78}
+body.light .chip.no{background:#f0f0f4;color:#8b8b98}
+body.light .chip.skip{background:#f4f4f7;color:#6b6b78;border-color:#cfcfd8}
+body.light .cap{text-shadow:none}
+body.light .grain{opacity:.05;mix-blend-mode:multiply}
+body.light .sticker{box-shadow:0 12px 0 rgba(11,11,16,.12)}

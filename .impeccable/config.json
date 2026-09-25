@@ -1,0 +1,14 @@
+{
+  "detector": {
+    "ignoreRules": [],
+    "ignoreFiles": [],
+    "ignoreValues": [
+      {
+        "rule": "overused-font",
+        "value": "inter",
+        "createdAt": "2026-09-25T16:57:14.046Z",
+        "reason": "brand font: projects/fonealo/project.json brand.font=Inter and knowledge/brand.md 'Type: Inter 500–900' (Fonealo brand guideline, not a default pick)"
+      }
+    ]
+  }
+}

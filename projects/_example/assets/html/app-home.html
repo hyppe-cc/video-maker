@@ -1,0 +1,32 @@
+<!-- Mock app screen rendered by `bun vk asset html`. 1170x2532 = iPhone screenshot size (3x).
+     Brand vars available: --brand --brand2 --ink --paper --ok --red --mut --font --font-display.
+     Edit freely: this is plain HTML/CSS. Keep it generic (no real platform logos). -->
+<style>
+  body{background:var(--paper);color:var(--ink);font-size:42px}
+  .status{height:140px;display:flex;align-items:flex-end;justify-content:space-between;padding:0 90px 18px;font-weight:700;font-size:46px}
+  .top{display:flex;align-items:center;justify-content:space-between;padding:40px 60px 20px}
+  .logo{display:flex;align-items:center;gap:28px;font:800 64px var(--font-display),var(--font)}
+  .logo i{width:110px;height:110px;border-radius:32px;background:linear-gradient(135deg,var(--brand),var(--brand2));display:block}
+  .avatar{width:110px;height:110px;border-radius:50%;background:#e6e6ee}
+  .hero{margin:40px 60px;border-radius:64px;padding:70px 64px;color:#fff;background:linear-gradient(150deg,var(--brand),var(--brand2));box-shadow:0 40px 90px color-mix(in srgb,var(--brand) 35%,transparent)}
+  .hero small{font-weight:700;opacity:.85;letter-spacing:.08em;text-transform:uppercase;font-size:36px}
+  .hero h1{font-size:128px;line-height:1;margin:24px 0 12px;letter-spacing:-3px}
+  .hero p{opacity:.9}
+  h2{margin:70px 60px 30px;font-size:52px}
+  .row{display:flex;align-items:center;gap:40px;margin:0 60px 28px;background:#fff;border-radius:48px;padding:40px 44px;box-shadow:0 10px 30px rgba(0,0,0,.05)}
+  .row i{width:120px;height:120px;border-radius:36px;display:flex;align-items:center;justify-content:center;font-size:64px;font-style:normal;background:color-mix(in srgb,var(--brand) 14%,#fff)}
+  .row b{display:block;font-size:48px}
+  .row span{color:var(--mut);font-size:38px}
+  .row em{margin-left:auto;font-style:normal;font-weight:800;color:var(--ok)}
+  .tabs{position:absolute;left:0;right:0;bottom:0;height:250px;background:#fff;border-top:2px solid #eee;display:flex;justify-content:space-around;padding-top:40px}
+  .tabs div{width:90px;height:90px;border-radius:28px;background:#e8e8ef}
+  .tabs div.on{background:var(--brand)}
+</style>
+<div class="status"><span>9:41</span><span>●●● 100%</span></div>
+<div class="top"><div class="logo"><i></i>Brand</div><div class="avatar"></div></div>
+<div class="hero"><small>This week</small><h1>+128</h1><p>new customers came back</p></div>
+<h2>Activity</h2>
+<div class="row"><i>☕</i><div><b>Maya stamped a card</b><span>2 min ago</span></div><em>7/8</em></div>
+<div class="row"><i>🎁</i><div><b>Reward unlocked</b><span>12 min ago</span></div><em>Free</em></div>
+<div class="row"><i>📍</i><div><b>Post reached 1,240 nearby</b><span>1 h ago</span></div><em>↑</em></div>
+<div class="tabs"><div class="on"></div><div></div><div></div><div></div></div>

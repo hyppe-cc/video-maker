@@ -1,0 +1,37 @@
+{
+  "name": "Loopa (example)",
+  "description": "Fictional habit-tracker app used as the shared example project. Copy it with `bun vk init <slug>`.",
+  "language": "en",
+  "brand": {
+    "name": "Loopa",
+    "primary": "#6366f1",
+    "secondary": "#22d3ee",
+    "ink": "#0b0b10",
+    "paper": "#fafaff",
+    "ok": "#22c55e",
+    "red": "#ff2e4d",
+    "muted": "#8b8b98",
+    "font": "Inter",
+    "display": "Inter"
+  },
+  "fonts": ["inter/900", "inter/800", "inter/600", "inter/500"],
+  "voice": {
+    "provider": "elevenlabs",
+    "voiceId": "",
+    "model": "eleven_multilingual_v2",
+    "languageCode": "en",
+    "settings": { "stability": 0.45, "similarity_boost": 0.8, "style": 0.3, "speed": 1.05 }
+  },
+  "strings": {
+    "chips": { "no": "no reply", "ok": "Link sent ✓", "skip": "Didn't ask" },
+    "now": "now",
+    "phone": { "thumb": "FREE<br>GUIDE", "text": "Comment <b>LOOP</b> and I'll send you the guide", "header": "Comments", "rule": "rule: LOOP" },
+    "warm": "✓ ¿? ÁÉÍÓÚ ñ $14"
+  },
+  "avatars": {
+    "@maya.k": ["#f59e0b", "M"],
+    "@jon_r": ["#8b5cf6", "J"],
+    "@lu.co": ["#06b6d4", "L"]
+  },
+  "format": { "width": 1080, "height": 1920, "fps": 30, "theme": "light", "lufs": -14, "bpm": 120, "music": true, "tail": 1.4 }
+}
