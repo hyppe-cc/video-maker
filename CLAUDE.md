@@ -13,7 +13,7 @@ Punchy vertical videos (Reels/TikTok/Shorts) from a script: ElevenLabs voice →
 - `.claude/skills/`: `vk-project`, `vk-learn`, `vk-script`, `vk-assets`, `vk-scenes`, `vk-make`.
 
 ## Commands
-- `bun vk help`, then `list`, `init`, `new`, `kb`, `voices`, `voice`, `cues`, `tighten`, `check`, `styles`, `asset …`, `mix`, `stills`, `render`
+- `bun vk help`, then `list`, `init`, `new`, `kb`, `voices`, `voice`, `cues`, `tighten`, `check`, `styles`, `asset …`, `music` (Sonic Pi), `mix`, `stills`, `render`
 - `bun run dev` (preview on :3000, hot-reloads on project changes), `bunx tsc --noEmit`, `bun run check` (Biome)
 
 ## Rules

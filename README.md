@@ -1,11 +1,11 @@
 # video-kit
 
 Make punchy vertical videos (Reels, TikTok, Shorts) with Claude Code.
-You write (or ask Claude for) a script. ElevenLabs voices it with word-level timing, animated HTML scenes are synced to the voice, and Playwright + ffmpeg render a 1080×1920 MP4 with a synthesized beat, SFX and loudness normalization.
+You write (or ask Claude for) a script. ElevenLabs voices it with word-level timing, animated HTML scenes are synced to the voice, and Playwright + ffmpeg render a 1080×1920 MP4 with a synthesized beat (or music written in [Sonic Pi](https://sonic-pi.net) code), SFX and loudness normalization.
 
 - **Projects** hold a brand, a voice and a **knowledge base** (brand, audience, offers, rules, learnings). Many videos per project.
 - **CLI first:** everything runs in the terminal (`bun vk …`), driven by Claude Code skills.
-- **Styles:** punchy social, motion graphics, cinematic storytelling and Vox-style explainers, each with its own primitives, fonts and music.
+- **Styles:** punchy social, motion graphics, cinematic storytelling, Vox-style explainers and developer tools, each with its own primitives, fonts and music.
 - **Assets:** search and download licensed stock (Openverse, Pexels), generate images, sound effects and music, render mock phone screens from HTML, or ask the user for real screenshots, all tracked with source and license.
 - **Web preview:** a TanStack Start app to browse projects, read the knowledge base, upload requested assets, scrub scenes live against the voice and play renders.
 
@@ -70,6 +70,7 @@ bun vk render mybrand launch              # → projects/mybrand/videos/launch/o
 | `bun vk check <project> <video>` | validate script ↔ scenes ↔ cues, missing/requested assets |
 | `bun vk styles` | list video styles |
 | `bun vk asset <sub> …` | asset library: `list add search pick gen html request requests pull credits rm` (`bun vk asset help`) |
+| `bun vk music <project> <video>` | Sonic Pi music: create `music.rb`, or render it to `build/music-sonicpi.wav` (`music: sonicpi`) |
 | `bun vk mix <project> <video>` | audio only (music + SFX + voice) → `build/audio.wav`, playable in the preview |
 | `bun vk stills <project> <video> [t…] [--dark\|--light]` | preview frames |
 | `bun vk render <project> <video> [--dark\|--light]` | final MP4 |
@@ -84,6 +85,7 @@ Set `style:` in a video's `script.md` (or `format.style` in project.json). Each 
 | `motion` | kinetic typography, counters, bar charts, panel wipes | `pulse` | `_example/motion-demo` |
 | `story` | full-bleed photos with Ken Burns, letterbox, chapter cards, subtitles | `ambient` | `_example/story-demo` |
 | `vox` | paper, newspaper clippings, highlighter, hand-drawn circles/arrows, timelines | `pluck` | `_example/vox-demo` |
+| `dev` | terminal typing, git diffs, pull requests, CI checks, rubber stamps, cursor | `pulse` | (docs in `engine/README.md`) |
 
 ## Assets & sound
 
@@ -102,7 +104,7 @@ bun vk asset credits mybrand launch                                  # attributi
 
 Requested assets appear in the preview's **Assets** tab with a drop zone. Uploading fulfils the request and the video updates live.
 
-Sound: the style's music preset (or `music: <preset|music asset>` in script.md), plus SFX events from the scenes. A sound-effect asset whose name matches an event (`camera`, `pop`, `whoosh`…) is used in place of, or in addition to, the built-in synth sounds.
+Sound: the style's music preset (or `music: <preset|music asset|sonicpi>` in script.md; Sonic Pi code can time drops and breaks to the video's marks and SFX events), plus SFX events from the scenes. A sound-effect asset whose name matches an event (`camera`, `pop`, `whoosh`…) is used in place of, or in addition to, the built-in synth sounds.
 
 ## Project layout
 

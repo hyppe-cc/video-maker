@@ -25,6 +25,7 @@ Make the shot list and source everything with the **vk-assets** skill: request r
 
 ## 4. Scenes
 Follow the **vk-scenes** skill in the video's style: write scenes.js, `bun vk check`, render stills, look at them, fix.
+Music: a style preset, a music asset, or Sonic Pi code composed to the edit (`music: sonicpi`, `bun vk music <p> <v>`; see `engine/README.md` Audio). Write the Sonic Pi file after the scenes, since it reads their SFX events.
 `bun vk mix <p> <v>` renders just the audio (music + SFX + voice) so the preview player can play the full mix before the final render.
 
 ## 5. Render

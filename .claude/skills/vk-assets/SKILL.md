@@ -21,6 +21,7 @@ From `script.md` (and the scene plan), list every visual and sound the video nee
 | Illustrations / impossible shots | **AI image** (`OPENAI_API_KEY`) | `bun vk asset gen <p> <name> "<prompt>" --shape portrait` |
 | Sound effects | Openverse audio (CC0 Freesound) or ElevenLabs | `bun vk asset search <p> "camera shutter" --kind audio` + `pick --name camera`, or `bun vk asset gen <p> camera "camera shutter click" --kind sfx --duration 1` |
 | Music | style preset (free, default) or ElevenLabs music | `music: pluck` in script.md, or `bun vk asset gen <p> bed "warm lofi, 90 bpm, no vocals" --kind music --duration 40` then `music: bed` |
+| Music composed to the edit | **Sonic Pi code** (free, deterministic, hits the story beats) | `bun vk music <p> <v>` creates `music.rb`; write it with `EVENTS`/`MARKS`, set `music: sonicpi`, run `bun vk music <p> <v>` again |
 | Logos, brand photos the user owns | ask the user, or `bun vk asset add <p> <file|url> --name logo` |
 
 If the ElevenLabs connector is available in this Claude session, its image/sound generation tools are another source: generate there, then `bun vk asset add <p> <result-url> --name <name> --license own`.
