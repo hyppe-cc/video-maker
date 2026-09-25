@@ -78,7 +78,7 @@ const ASSET_HELP = `bun vk asset <sub>
   add <p> <file|url> --name n [--kind k] [--license L] [--credit "Author"]
   search <p> <query…> [--kind image|video|audio] [--source openverse|pexels] [--orientation portrait|landscape|square] [--any-license]
   pick <p> <n> --name x [--kind sfx|music]        download result #n of the last search
-  gen <p> <name> "<prompt>" [--kind image|sfx|music] [--shape portrait|landscape|square] [--duration s]
+  gen <p> <name> "<prompt>" [--kind image|sfx|music] [--shape portrait|landscape|square] [--duration s] [--plan plan.json]
   html <p> <name> [--size 1170x2532] [--template screen]   render assets/html/<name>.html to a PNG (mock phone screens, cards)
   request <p> <name> "<what is needed>" [--video v] [--kind image|video] [--size 1170x2532]   ask the user for an asset
   requests <p>                                     open requests
@@ -443,7 +443,7 @@ const commands: Record<string, () => Promise<void> | void> = {
 				const kind = kindFlag ?? "image";
 				const a =
 					kind === "sfx" ? await genSfx(p, name, prompt, flags.duration ? Number(flags.duration) : undefined)
-					: kind === "music" ? await genMusic(p, name, prompt, flags.duration ? Number(flags.duration) : 30)
+					: kind === "music" ? await genMusic(p, name, prompt, flags.duration ? Number(flags.duration) : 30, typeof flags.plan === "string" ? JSON.parse(readFileSync(flags.plan, "utf8")) : undefined)
 					: await genImage(p, name, prompt, (str("shape") as "portrait") ?? "portrait");
 				console.log(`generated ${a.kind} "${a.name}" → assets/${a.file}`);
 				return;

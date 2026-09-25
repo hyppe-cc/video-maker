@@ -21,6 +21,7 @@ From `script.md` (and the scene plan), list every visual and sound the video nee
 | Illustrations / impossible shots | **AI image** (`OPENAI_API_KEY`) | `bun vk asset gen <p> <name> "<prompt>" --shape portrait` |
 | Sound effects | Openverse audio (CC0 Freesound) or ElevenLabs | `bun vk asset search <p> "camera shutter" --kind audio` + `pick --name camera`, or `bun vk asset gen <p> camera "camera shutter click" --kind sfx --duration 1` |
 | Music | style preset (free, default) or ElevenLabs music | `music: pluck` in script.md, or `bun vk asset gen <p> bed "warm lofi, 90 bpm, no vocals" --kind music --duration 40` then `music: bed` |
+| Music timed to the edit, generated | **ElevenLabs music with a composition plan** (`--plan plan.json`: global styles + sections with `duration_ms`, 3–120 s each). The model drifts ~2 s and short sections fade out, so for exact hits generate longer pieces per section, cut each from a detected onset and place them at the section times (ffmpeg `atrim` + `adelay` + `amix`), then `bun vk asset add` the result | `bun vk asset gen <p> <name> "…" --kind music --plan plan.json` |
 | Music composed to the edit | **Sonic Pi code** (free, deterministic, hits the story beats) | `bun vk music <p> <v>` creates `music.rb`; write it with `EVENTS`/`MARKS`, set `music: sonicpi`, run `bun vk music <p> <v>` again |
 | Logos, brand photos the user owns | ask the user, or `bun vk asset add <p> <file|url> --name logo` |
 

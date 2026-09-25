@@ -67,15 +67,24 @@ export async function genSfx(p: string, name: string, prompt: string, duration?:
 	return addFile(p, f, { name, kind: "sfx", source: { type: "elevenlabs", prompt, model: "sound-generation" }, license: "own" });
 }
 
-/** Text → music track (instrumental bed for a video). */
-export async function genMusic(p: string, name: string, prompt: string, seconds = 30) {
-	const audio = await eleven("/v1/music?output_format=mp3_44100_128", {
-		prompt,
-		music_length_ms: Math.round(Math.min(300, Math.max(10, seconds)) * 1000),
-	});
+/** ElevenLabs music composition plan: global styles + timed sections (each 3–120 s). */
+export type MusicPlan = {
+	positive_global_styles: string[];
+	negative_global_styles: string[];
+	sections: { section_name: string; positive_local_styles: string[]; negative_local_styles: string[]; duration_ms: number; lines: string[] }[];
+};
+
+/** Text → music track (instrumental bed for a video). With a plan, sections follow the edit. */
+export async function genMusic(p: string, name: string, prompt: string, seconds = 30, plan?: MusicPlan) {
+	const audio = await eleven(
+		"/v1/music?output_format=mp3_44100_128",
+		plan
+			? { composition_plan: plan }
+			: { prompt, music_length_ms: Math.round(Math.min(300, Math.max(10, seconds)) * 1000) },
+	);
 	const f = tmpFile(p, `${name}.mp3`);
 	writeFileSync(f, audio);
-	return addFile(p, f, { name, kind: "music", source: { type: "elevenlabs", prompt, model: "music" }, license: "own" });
+	return addFile(p, f, { name, kind: "music", source: { type: "elevenlabs", prompt: plan ? JSON.stringify(plan) : prompt, model: "music" }, license: "own" });
 }
 
 // ---------- HTML renders ----------
