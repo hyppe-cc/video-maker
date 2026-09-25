@@ -5,7 +5,7 @@ You write (or ask Claude for) a script. ElevenLabs voices it with word-level tim
 
 - **Projects** hold a brand, a voice and a **knowledge base** (brand, audience, offers, rules, learnings). Many videos per project.
 - **CLI first:** everything runs in the terminal (`bun vk …`), driven by Claude Code skills.
-- **Styles:** punchy social, motion graphics, cinematic storytelling, Vox-style explainers and developer tools, each with its own primitives, fonts and music.
+- **Styles:** punchy social, motion graphics, cinematic storytelling, Vox-style explainers, developer tools and manifesto films, each with its own primitives, fonts and music.
 - **Assets:** search and download licensed stock (Openverse, Pexels), generate images, sound effects and music, render mock phone screens from HTML, or ask the user for real screenshots, all tracked with source and license.
 - **Web preview:** a TanStack Start app to browse projects, read the knowledge base, upload requested assets, scrub scenes live against the voice and play renders.
 
@@ -86,6 +86,7 @@ Set `style:` in a video's `script.md` (or `format.style` in project.json). Each 
 | `story` | full-bleed photos with Ken Burns, letterbox, chapter cards, subtitles | `ambient` | `_example/story-demo` |
 | `vox` | paper, newspaper clippings, highlighter, hand-drawn circles/arrows, timelines | `pluck` | `_example/vox-demo` |
 | `dev` | terminal typing, git diffs, pull requests, CI checks, rubber stamps, cursor | `pulse` | (docs in `engine/README.md`) |
+| `anthem` | manifesto films: slamming uppercase type, scramble, strikes, strobes, B&W / red-duotone footage | `ambient` | (docs in `engine/README.md`) |
 
 ## Assets & sound
 

@@ -157,6 +157,18 @@ Developer-native screens. Every helper takes `lt` and an `at` (scene-relative se
 | `label(lt, at, text, {x, y, size, color, align})` | small mono `// comment` label that types in |
 | `glitch(lt, at, {d, amp})` / `scan(lt, html, {d})` | chromatic glitch CSS for a wrapper / scanline reveal |
 
+### anthem: `ANTHEM.*` (project display font, music `ambient`)
+Manifesto / brand films: one accent color, giant uppercase type, documentary footage.
+| | |
+|---|---|
+| `bg(t, {glow, rate, y})` | near-black field with a breathing brand glow |
+| `footage(name, lt, {start, tone: 'bw'\|'red'\|'natural', dark, push, dur, x, y, w, h, grad})` | video clip or image: B&W, red duotone (keeps detail) or natural, slow push, darkened for type |
+| `slam(lt, at, 'LINE\nLINE', {size, red, times, stagger, from, out, ghost})` | words slam in one by one (scale + blur); `times` = per-word times, e.g. marks |
+| `scramble(lt, at, text, {d, size})` | hacker decode: glyphs resolve left to right |
+| `label(lt, at, text, {rule})` | wide-tracked kicker with a red rule |
+| `fromTo(lt, at, from, to, {swap})` | "de X" struck through, then "a Y" slams in red |
+| `strike` / `flashAt` / `strobe` / `shake` / `black` / `marquee` / `subtitle` | red strike bar, flash and strobe frames at any time, camera shake, black frames, outlined text band, documentary subtitle for `o.caps` |
+
 ## Audio
 
 The mix (`cli/lib/audio.ts`, `bun vk mix`) = music bed + SFX events + voice, music ducked under the voice, loudness-normalized on render.

@@ -95,13 +95,14 @@ function probe(file: string): { width?: number; height?: number; duration?: numb
 	}
 }
 
-/** Pre-extract video frames at the project fps so scenes can show them frame-accurately (render = screenshots). */
-function extractFrames(p: string, name: string, src: string, fps: number, maxW = 1080) {
+/** Pre-extract video frames at the project fps so scenes can show them frame-accurately (render = screenshots).
+ * Only the first `maxSec` seconds: a scene rarely holds a clip longer, and frames are ~100 KB each. */
+function extractFrames(p: string, name: string, src: string, fps: number, maxW = 1080, maxSec = 20) {
 	const dir = join("frames", name);
 	const abs = join(assetsDir(p), dir);
 	rmSync(abs, { recursive: true, force: true });
 	mkdirSync(abs, { recursive: true });
-	const r = spawnSync("ffmpeg", ["-v", "error", "-y", "-i", src, "-vf", `fps=${fps},scale='min(${maxW},iw)':-2`, "-q:v", "3", join(abs, "%05d.jpg")]);
+	const r = spawnSync("ffmpeg", ["-v", "error", "-y", "-i", src, "-t", String(maxSec), "-vf", `fps=${fps},scale='min(${maxW},iw)':-2`, "-q:v", "3", join(abs, "%05d.jpg")]);
 	if (r.status !== 0) throw new Error(`ffmpeg frame extraction failed: ${r.stderr.toString().slice(-400)}`);
 	return { dir, count: readdirSync(abs).filter((f) => f.endsWith(".jpg")).length, fps };
 }

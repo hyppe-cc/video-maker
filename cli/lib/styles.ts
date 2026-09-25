@@ -34,6 +34,12 @@ export const STYLES = {
 		fonts: ["jetbrains-mono/400", "jetbrains-mono/700"],
 		music: "pulse" as MusicPreset,
 	},
+	anthem: {
+		label: "Anthem / manifesto",
+		about: "Brand-film drama: giant uppercase type slamming in, text scramble, red strikes, strobes, B&W or red-duotone documentary footage, breathing glow.",
+		fonts: [] as string[],
+		music: "ambient" as MusicPreset,
+	},
 } as const;
 
 export type StyleName = keyof typeof STYLES;

@@ -16,6 +16,7 @@ if the idea needs a fact that is missing, ask or run the vk-learn skill first.
 | `motion` | stats, features, launches, before/after numbers | short declarative lines, one number or claim per line |
 | `story` | a customer or founder story, emotional arc, brand film | past tense, a named person, slower; setup → conflict → turn → resolution |
 | `vox` | explaining why something happens, data, history, "what is X" | a question hook, evidence with a source, then the answer; every fact cited in knowledge |
+| `anthem` | manifestos, brand films, launches that sell a belief (a movement, a community) | slower, with weight; second person; problem → identity → transformation → "you're already part of it" → call; pauses ("...") are part of the drama |
 | `dev` | software audiences: dev tools, launches for developers, "we changed X" framed as code | dry, precise; the joke is the format (a PR, a diff, a failing check), one change per line |
 
 ## Shape (15–35 s, 4–9 lines)

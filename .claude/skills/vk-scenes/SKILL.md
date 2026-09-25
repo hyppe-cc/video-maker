@@ -15,6 +15,7 @@ Look at the example for the video's style before writing:
 | motion | `projects/_example/videos/motion-demo/scenes.js` | flat color, masked type, counters, charts, wipes |
 | story | `projects/_example/videos/story-demo/scenes.js` | photos + Ken Burns, letterbox, chapter card, subtitles, dips |
 | vox | `projects/_example/videos/vox-demo/scenes.js` | paper, clippings, highlighter, circles/arrows, timeline, sources |
+| anthem | `engine/README.md` (anthem section) | black, one red, giant slamming type on the voice's marks, B&W documentary footage, strobes on the big words |
 | dev | `engine/README.md` (dev section) | terminal, editor, diffs, PRs, CI checks, stamps, cursor; captions type in with a caret |
 
 ## Steps

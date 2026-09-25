@@ -24,7 +24,7 @@ export type Format = {
 	bpm: number;
 	/** true = the style's preset, false/"none" = off, a preset name, or a music asset name */
 	music: boolean | string;
-	/** default style for new videos: punchy | motion | story | vox | dev */
+	/** default style for new videos: punchy | motion | story | vox | dev | anthem */
 	style: string;
 	/** seconds held after the last spoken word */
 	tail: number;
