@@ -15,6 +15,7 @@ Look at the example for the video's style before writing:
 | motion | `projects/_example/videos/motion-demo/scenes.js` | flat color, masked type, counters, charts, wipes |
 | story | `projects/_example/videos/story-demo/scenes.js` | photos + Ken Burns, letterbox, chapter card, subtitles, dips |
 | vox | `projects/_example/videos/vox-demo/scenes.js` | paper, clippings, highlighter, circles/arrows, timeline, sources |
+| dev | `engine/README.md` (dev section) | terminal, editor, diffs, PRs, CI checks, stamps, cursor; captions type in with a caret |
 
 ## Steps
 1. Read `script.md` and `cues.json` (if voiced) of the video, plus `knowledge/brand.md` and `rules.md`.
@@ -22,7 +23,7 @@ Look at the example for the video's style before writing:
 3. Write `projects/<p>/videos/<v>/scenes.js`:
    - `LINES`: exactly one entry per script line, same order. Caption text may be shorter than the spoken line; highlight 1–2 words (`hl`); split long lines with `caps` + `f`. Use `nocap:true` when the scene draws its own big text.
    - `S`: scene renderers `name(lt, t, o)` returning HTML strings. Only pure functions of time. Use brand vars (`var(--brand)`, `var(--ink)`, …) instead of hex colors so the scene follows project.json.
-   - Stay in the video's style (`style:` in script.md): use its library and caption helper (`MOTION.caption`, `STORY.subtitle`, `VOX.caption`, or `caption` for punchy). Borrow from another style only for a deliberate punch.
+   - Stay in the video's style (`style:` in script.md): use its library and caption helper (`MOTION.caption`, `STORY.subtitle`, `VOX.caption`, `DEV.caption`, or `caption` for punchy). Borrow from another style only for a deliberate punch.
    - Images, screens, clips and sounds come from the asset library by name. If a scene needs something that doesn't exist, get it with the **vk-assets** skill (or request it from the user) instead of faking it with shapes.
    - `SPEC`: `[sceneName, [firstLine, lastLine], opts]` covering every line in order, with `sfx` timings: built-ins (`pop`, `ok`, `skip`, `dm`, `impact`, `price`, `cta`, `whoosh`) or the name of any `sfx` asset (`camera`, `swipe`…). The first `impact` is the music drop, so put it on the "problem" hit. Story videos usually want few, soft sounds; motion and punchy want one on every beat.
    - Time things from `o.l` (the scene's line windows), `frac(o,[.5])`, and `o.M.<mark>` for `{#mark}` words, never hard-coded absolute seconds.

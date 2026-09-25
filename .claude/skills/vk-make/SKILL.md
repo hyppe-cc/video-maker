@@ -1,6 +1,6 @@
 ---
 name: vk-make
-description: Make a complete vertical video end to end with video-kit in any style (punchy, motion graphics, storytelling, Vox-style explainer): idea → script → ElevenLabs voice → assets → animated scenes → visual review → final MP4, for a given project ("make a video for Fonealo about the loyalty cards", "new Hyppe reel about X", "render it"). Orchestrates the vk-script, vk-assets, vk-scenes and vk-learn skills.
+description: Make a complete vertical video end to end with video-kit in any style (punchy, motion graphics, storytelling, Vox-style explainer, dev tools): idea → script → ElevenLabs voice → assets → animated scenes → visual review → final MP4, for a given project ("make a video for Fonealo about the loyalty cards", "new Hyppe reel about X", "render it"). Orchestrates the vk-script, vk-assets, vk-scenes and vk-learn skills.
 ---
 
 # vk-make: idea to MP4
@@ -17,7 +17,7 @@ Everything runs from the terminal. The web app (`bun run dev`, http://localhost:
 
 ## 2. Voice
 `bun vk voice <p> <v>` → `vo.mp3` + `cues.json` (per-line timing from ElevenLabs character timestamps, `{#marks}` → `kw`).
-Check the printed timings: lines should be in order with short gaps. If the pacing is slow, `bun vk tighten <p> <v> --max-gap 0.25`.
+Check the printed timings: lines should be in order with short gaps. If the pacing is slow, `bun vk tighten <p> <v> --max-gap 0.25` (keeps line timings and `{#marks}`; run it once per voicing).
 If a word is mispronounced, respell it in script.md (e.g. "énfo" → "info") and voice again.
 
 ## 3. Assets

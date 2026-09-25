@@ -4,9 +4,9 @@ Punchy vertical videos (Reels/TikTok/Shorts) from a script: ElevenLabs voice →
 **Everything runs in the terminal** (`bun vk …` + skills). The TanStack Start app in `src/` is a read-only preview.
 
 ## Layout
-- `engine/`: page runtime (`primitives.js`, `timeline.js`, `base.css`, `styles/{motion,story,vox}.js`). Scene/asset/audio API reference: `engine/README.md`.
+- `engine/`: page runtime (`primitives.js`, `timeline.js`, `base.css`, `styles/{motion,story,vox,dev}.js`). Scene/asset/audio API reference: `engine/README.md`.
 - `cli/`: `bun vk <cmd>` (`cli/index.ts`), libs in `cli/lib/` (page builder, render, audio mix + music presets, cues, ElevenLabs, assets manifest, stock search, generators, styles registry). Must stay Node-compatible (the web app imports `cli/lib/project.ts` and `page.ts`).
-- `projects/<slug>/`: `project.json`, `knowledge/*.md`, `scenes/*.js` (shared), `assets/` (manifest.json + files by kind), `videos/<v>/{script.md, scenes.js, cues.json, vo.mp3, out/, stills/, build/}`.
+- `projects/<slug>/`: `project.json` (`fontFiles` loads brand fonts from `assets/`), `knowledge/*.md`, `scenes/*.js` (shared), `assets/` (manifest.json + files by kind), `videos/<v>/{script.md, scenes.js, cues.json, vo.mp3, out/, stills/, build/}`.
   Only `projects/_example` is committed; all other projects are gitignored (private). `VK_PROJECTS_DIR` moves them elsewhere.
 - `src/`: preview UI. `src/server/vk.ts` (server fns), `src/server/static.ts` (file serving, also used by the Vite dev middleware in `vite.config.ts`).
 - `src/routes/api/upload.$project.$name.ts`: the only write endpoint (fulfils open asset requests).

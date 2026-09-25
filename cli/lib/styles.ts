@@ -28,6 +28,12 @@ export const STYLES = {
 		fonts: ["playfair-display/700", "playfair-display/900", "ibm-plex-mono/500"],
 		music: "pluck" as MusicPreset,
 	},
+	dev: {
+		label: "Dev tools",
+		about: "Developer-native: terminal typing, code editor, git diffs, pull requests, CI checks, stamps, cursor clicks. For software audiences.",
+		fonts: ["jetbrains-mono/400", "jetbrains-mono/700"],
+		music: "pulse" as MusicPreset,
+	},
 } as const;
 
 export type StyleName = keyof typeof STYLES;

@@ -139,6 +139,24 @@ The primitives above: kinetic `caption`, `phone`/`comment` mocks, `sticker`, `bg
 | `zoom(name, lt, dur, {from, to, x, y, w, h, gray})` | zoom into a document/photo region (`[scale, cx, cy]`) |
 | `source(text)` / `caption(lt, c)` | citation line, highlighter caption for `o.caps` |
 
+### dev: `DEV.*` (project display font + JetBrains Mono, music `pulse`)
+Developer-native screens. Every helper takes `lt` and an `at` (scene-relative seconds).
+| | |
+|---|---|
+| `bg(t, {glow, grid, color})` | ink + slow brand glow + panning dot grid + vignette |
+| `win(html, {x, y, w, h, title, lt, at, pad})` | editor/terminal window chrome (pops in when `lt` is given) |
+| `term(lt, at, [{cmd} \| {out, html, color, wait}], {cps, prompt, size, idle})` / `termEnd(at, rows, {cps})` | terminal: commands type, outputs follow; `termEnd` = when it finishes |
+| `code(lt, at, lines, {typeLine, typeAt, marks, size})` / `hi(src)` / `sh(cmd)` | editor with line numbers; JS/TS/JSX and shell highlighting |
+| `diff(lt, at, [{op: '-'\|'+'\|' '\|'@', t, at, kill, gone}], {size, stagger, cps})` | git diff: `+` rows type in, `-` rows get struck at `kill`, rows collapse at `gone` |
+| `pr(lt, at, {num, title, branch, author, add, del, mergeAt, size})` | pull request header; Open pill flips to Merged at `mergeAt` |
+| `checks(lt, at, items, {stagger, d, summary})` / `checksEnd(at, n)` | CI checks: spinner → ✓ (or ✗ with `{name, fail:true}`), then "All checks have passed" |
+| `chips(lt, at, [{k, icon, n}], {hot: {i: time}, size})` | reaction/label pills that pop in; `hot` fills one with the brand color |
+| `stamp(lt, at, text, {x, y, rot, color, size})` | rubber stamp slam (REJECTED, NOT FOR SALE) |
+| `cursor(lt, [[t, x, y], …], {clicks})` | mouse pointer with click rings |
+| `type(lt, at, text, {x, y, size, cps, hl, align, until})` / `caption(lt, c)` | typed display headline with a block caret (hl = selection highlight); caption for `o.caps` |
+| `label(lt, at, text, {x, y, size, color, align})` | small mono `// comment` label that types in |
+| `glitch(lt, at, {d, amp})` / `scan(lt, html, {d})` | chromatic glitch CSS for a wrapper / scanline reveal |
+
 ## Audio
 
 The mix (`cli/lib/audio.ts`, `bun vk mix`) = music bed + SFX events + voice, music ducked under the voice, loudness-normalized on render.

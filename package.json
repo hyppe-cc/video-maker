@@ -17,7 +17,9 @@
   },
   "dependencies": {
     "@fontsource/ibm-plex-mono": "^5.3.0",
+    "@fontsource/instrument-sans": "^5.3.0",
     "@fontsource/inter": "^5.3.0",
+    "@fontsource/jetbrains-mono": "^5.3.0",
     "@fontsource/noto-color-emoji": "^5.3.2",
     "@fontsource/pacifico": "^5.3.0",
     "@fontsource/playfair-display": "^5.3.0",

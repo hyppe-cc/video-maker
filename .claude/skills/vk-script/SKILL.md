@@ -16,6 +16,7 @@ if the idea needs a fact that is missing, ask or run the vk-learn skill first.
 | `motion` | stats, features, launches, before/after numbers | short declarative lines, one number or claim per line |
 | `story` | a customer or founder story, emotional arc, brand film | past tense, a named person, slower; setup → conflict → turn → resolution |
 | `vox` | explaining why something happens, data, history, "what is X" | a question hook, evidence with a source, then the answer; every fact cited in knowledge |
+| `dev` | software audiences: dev tools, launches for developers, "we changed X" framed as code | dry, precise; the joke is the format (a PR, a diff, a failing check), one change per line |
 
 ## Shape (15–35 s, 4–9 lines)
 1. **Hook** (≤1.5 s spoken): a question or a "that's me" claim in the audience's own words. No brand name first.
@@ -45,7 +46,7 @@ Create the folder with `bun vk new <p> <v> --title "..."` if needed.
 ```md
 ---
 title: Human title
-style: punchy           # punchy | motion | story | vox (default: project format.style)
+style: punchy           # punchy | motion | story | vox | dev (default: project format.style)
 theme: light            # optional; overrides project format.theme
 music: true             # optional: true (style preset) | beat | pulse | ambient | pluck | none | <music asset name>
 uses: [shared]          # optional; includes projects/<p>/scenes/shared.js before scenes.js
