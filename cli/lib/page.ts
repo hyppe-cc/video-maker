@@ -18,6 +18,13 @@ export type PageOptions = {
 
 const read = (f: string) => readFileSync(f, "utf8");
 
+/** @font-face rules for project-local font files (variable fonts get the full weight range). */
+export function fontFaces(files: Record<string, string>, assets: string): string {
+	return Object.entries(files ?? {})
+		.map(([family, file]) => `@font-face{font-family:'${family}';src:url('${assets}${file}') format('woff2');font-weight:100 900;font-display:block}`)
+		.join("");
+}
+
 /**
  * Build the self-contained HTML page for a video: engine + project scenes + video scenes.
  * The page exposes window.render(t), window.events(), window.scenes() and is a pure
@@ -34,6 +41,7 @@ export function buildPage(p: string, v: string, opts: PageOptions): string {
 	const fonts = [...new Set([...project.fonts, ...STYLE_NAMES.flatMap((n) => STYLES[n].fonts), "noto-color-emoji/400"])]
 		.map((f) => `<link rel="stylesheet" href="node_modules/@fontsource/${f}.css">`)
 		.join("\n");
+	const faces = fontFaces(project.fontFiles, opts.assets);
 
 	const vars = `:root{--brand:${brand.primary};--brand2:${brand.secondary};--ink:${brand.ink};--paper:${brand.paper};--ok:${brand.ok};--red:${brand.red};--mut:${brand.muted};--font:'${brand.font}';--font-display:'${brand.display}';--w:${format.width}px;--h:${format.height}px}`;
 
@@ -77,7 +85,7 @@ export function buildPage(p: string, v: string, opts: PageOptions): string {
 <html><head><meta charset="utf-8">
 <base href="${opts.base}">
 ${fonts}
-<style>${read(join(ENGINE_DIR, "base.css"))}
+<style>${faces}${read(join(ENGINE_DIR, "base.css"))}
 ${vars}</style></head>
 <body class="style-${style}${light ? " light" : ""}"><div id="stage"></div>
 <svg width="0" height="0" style="position:absolute"><filter id="n"><feTurbulence type="fractalNoise" baseFrequency=".9" numOctaves="2" stitchTiles="stitch"/></filter></svg>

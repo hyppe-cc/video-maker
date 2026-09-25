@@ -24,7 +24,7 @@ export type Format = {
 	bpm: number;
 	/** true = the style's preset, false/"none" = off, a preset name, or a music asset name */
 	music: boolean | string;
-	/** default style for new videos: punchy | motion | story | vox */
+	/** default style for new videos: punchy | motion | story | vox | dev */
 	style: string;
 	/** seconds held after the last spoken word */
 	tail: number;
@@ -46,6 +46,8 @@ export type Project = {
 	brand: Brand;
 	/** fontsource "<package>/<weight>" entries, e.g. "inter/900" */
 	fonts: string[];
+	/** local font files: family -> path under projects/<slug>/assets/ (fonts not on fontsource, e.g. a brand's own face) */
+	fontFiles: Record<string, string>;
 	voice: Voice;
 	strings: {
 		chips: { no: string; ok: string; skip: string };
@@ -74,6 +76,7 @@ export const DEFAULT_PROJECT: Omit<Project, "slug"> = {
 		display: "Inter",
 	},
 	fonts: ["inter/900", "inter/800", "inter/600", "inter/500"],
+	fontFiles: {},
 	voice: { provider: "elevenlabs", voiceId: "", model: "eleven_multilingual_v2" },
 	strings: {
 		chips: { no: "no reply", ok: "Link sent ✓", skip: "Didn't ask" },

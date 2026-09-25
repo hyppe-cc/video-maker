@@ -20,6 +20,7 @@ and `knowledge/*.md` (what every script is written from). Many videos live under
 4. **Write `project.json`.** Keys (anything omitted falls back to defaults in `cli/lib/project.ts`):
    - `brand`: `name, primary, secondary, ink, paper, ok, red, muted, font, display`.
    - `fonts`: `@fontsource` entries as `"<package>/<weight>"`. Inter and Pacifico are installed; for another font run `bun add @fontsource/<name>` and add e.g. `"space-grotesk/700"`, then set `brand.font` to its family name.
+   - `fontFiles`: brand fonts that aren't on fontsource (e.g. from the brand's site, license permitting): `{"Clash Display": "fonts/ClashDisplay-Variable.woff2"}`, file in `assets/fonts/`, then use the family in `brand.display`.
    - `voice`: `voiceId` (from `bun vk voices [search]`, pick one that fits locale + tone, and say which), `model` (`eleven_multilingual_v2`), `languageCode`, optional `settings` (`stability`, `similarity_boost`, `style`, `speed`).
    - `strings`: the engine's built-in UI copy (comment chips, phone mock post) in the video language.
    - `avatars`: fake handles used in comment mocks, `{"@handle": ["#color", "L"]}`.

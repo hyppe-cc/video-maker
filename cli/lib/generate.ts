@@ -6,6 +6,7 @@ import { pathToFileURL } from "node:url";
 import { chromium } from "playwright";
 import { addFile, assetsDir } from "./assets.ts";
 import { ROOT } from "./paths.ts";
+import { fontFaces } from "./page.ts";
 import { loadProject } from "./project.ts";
 
 const tmpFile = (p: string, name: string) => {
@@ -93,7 +94,8 @@ export async function renderHtml(p: string, name: string, size = "1170x2532", sc
 	const fonts = [...new Set([...project.fonts, "noto-color-emoji/400"])]
 		.map((f) => `<link rel="stylesheet" href="node_modules/@fontsource/${f}.css">`)
 		.join("");
-	const head = `<base href="${pathToFileURL(ROOT).href}/">${fonts}<style>:root{--brand:${b.primary};--brand2:${b.secondary};--ink:${b.ink};--paper:${b.paper};--ok:${b.ok};--red:${b.red};--mut:${b.muted};--font:'${b.font}';--font-display:'${b.display}'}*{box-sizing:border-box;margin:0;padding:0}html,body{width:${w}px;height:${h}px;overflow:hidden;font-family:var(--font),'Noto Color Emoji',sans-serif;-webkit-font-smoothing:antialiased}</style>`;
+	const faces = fontFaces(project.fontFiles, `${pathToFileURL(assetsDir(p)).href}/`);
+	const head = `<base href="${pathToFileURL(ROOT).href}/">${fonts}<style>${faces}:root{--brand:${b.primary};--brand2:${b.secondary};--ink:${b.ink};--paper:${b.paper};--ok:${b.ok};--red:${b.red};--mut:${b.muted};--font:'${b.font}';--font-display:'${b.display}'}*{box-sizing:border-box;margin:0;padding:0}html,body{width:${w}px;height:${h}px;overflow:hidden;font-family:var(--font),'Noto Color Emoji',sans-serif;-webkit-font-smoothing:antialiased}</style>`;
 	// headless Chromium has no color emoji font: swap emoji for Twemoji SVGs (same as the engine)
 	const body = readFileSync(src, "utf8").replace(
 		/(\p{Extended_Pictographic})\uFE0F?/gu,
